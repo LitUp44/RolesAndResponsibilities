@@ -170,16 +170,15 @@ if st.session_state.submitted:
         """
         <div style="padding: 10px; background-color: #f0f0f0; border-radius: 8px;">
             <p style="font-size: 18px; color: #333;">
-                Thank you for completing the quiz! This aims to help you see how you and your partner divide financial roles. 
-                It's a bit of a trick question because ultimately you want to make your decisions together even if you execute different things.
-                Ultimately the goal is to make sure you both feel you have a real partner when it comes to finances!
-
-                Day-to-day finances are the finacial decisions that happen daily or monthly. Paying bills ontime, deciding what kind of vacation you can afford. 
-
-                Longterm financial decisions are the decisions that govern your long-term thinking; how you want to save and invest your money, what kind of retirement you hope to have. 
-
-                The goal is to have most of these roles be a strong 'BOTH' as you progress on your financial journey! Check out your results below.  
+                <p style="font-size: 18px; color: #333;">
+                Thank you for completing the quiz! This aims to help you see how you and your partner divide financial roles.<br><br>
+                It's a bit of a trick question because ultimately you want to make your decisions together even if you execute different things.<br><br>
+                Ultimately the goal is to make sure you both feel you have a real partner when it comes to finances!<br><br>
+                Day-to-day finances are the financial decisions that happen daily or monthly. Paying bills on time, deciding what kind of vacation you can afford.<br><br>
+                Longterm financial decisions are the decisions that govern your long-term thinking; how you want to save and invest your money, what kind of retirement you hope to have.<br><br>
+                The goal is to have most of these roles be a strong 'BOTH' as you progress on your financial journey! Check out your results below.
             </p>
+                 </p>
         </div>
         """,
         unsafe_allow_html=True
