@@ -175,7 +175,7 @@ if st.session_state.submitted:
                 It's a bit of a trick question because ultimately you want to make your decisions together even if you execute different things.<br><br>
                 <strong>Day-to-day finances  </strong> are the financial decisions that happen daily or monthly. Paying bills on time, deciding what kind of vacation you can afford.<br><br>
                 <strong>Long-term financial decisions </strong> are the decisions that govern your long-term thinking; how you want to save and invest your money, what kind of retirement you hope to have.<br><br>
-                The goal is to have most of these roles be a strong 'BOTH' as you progress on your financial journey! Check out your results below.
+                The goal is to have most of these roles be a strong <strong>'BOTH'</strong> as you progress on your financial journey! Check out your results below.
             </p>
                  </p>
         </div>
