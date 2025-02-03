@@ -2,6 +2,20 @@ import streamlit as st
 import random
 import plotly.express as px
 
+st.markdown(
+    """
+    <style>
+    /* This CSS rule overrides the background color of info messages.
+       Note: The class name used by Streamlit might change in future versions.
+       Inspect your app in the browser to confirm the class name if needed. */
+    .stAlert {  
+        background-color: #ffeae6 !important;  
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # -----------------------------
 # Header & Sub-header Functions
 # -----------------------------
