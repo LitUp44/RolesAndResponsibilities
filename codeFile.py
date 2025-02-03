@@ -72,7 +72,7 @@ random.shuffle(all_questions)
 # -----------------------------
 # Updated options list with emojis
 # -----------------------------
-options = ["me 🙋", "my partner", "neither of us really", "both of us 👫"]
+options = ["Me! 🕺", "My partner 😁", "Neither of us really 🙇", "Both of us 👯"]
 
 # -----------------------------
 # Session State Initialization
