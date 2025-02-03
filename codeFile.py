@@ -107,7 +107,7 @@ if not st.session_state.submitted:
             st.session_state.submitted = True
             st.session_state.responses = responses
             st.session_state.questions = all_questions
-            st.experimental_rerun()
+            st.rerun()
 
 if st.session_state.submitted:
     st.title("Quiz Results")
@@ -172,4 +172,4 @@ if st.session_state.submitted:
     if st.button("Restart Quiz"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
-        st.experimental_rerun()
+        st.rerun()
