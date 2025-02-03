@@ -101,7 +101,7 @@ if not st.session_state.quiz_started and not st.session_state.submitted:
     st.write("Welcome! Ready to find out which money roles suit you best?")
     if st.button("Start Now"):
         st.session_state.quiz_started = True
-        st.experimental_rerun()
+        st.rerun()
 
 # Quiz Question Pages: Display one question per page.
 if st.session_state.quiz_started and not st.session_state.submitted:
@@ -127,7 +127,7 @@ if st.session_state.quiz_started and not st.session_state.submitted:
         if current > 0:
             if st.button("Previous"):
                 st.session_state.current_question -= 1
-                st.experimental_rerun()
+                st.rerun()
     with col3:
         # On the final question, change button text to "Submit".
         if current == total - 1:
@@ -135,13 +135,13 @@ if st.session_state.quiz_started and not st.session_state.submitted:
                 # Save the answer for the current question.
                 st.session_state.responses[f"q_{current}"] = answer
                 st.session_state.submitted = True
-                st.experimental_rerun()
+                st.rerun()
         else:
             if st.button("Next"):
                 # Save the answer and move to the next question.
                 st.session_state.responses[f"q_{current}"] = answer
                 st.session_state.current_question += 1
-                st.experimental_rerun()
+                st.rerun()
 
 # Results Page: After quiz submission.
 if st.session_state.submitted:
