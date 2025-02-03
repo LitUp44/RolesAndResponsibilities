@@ -125,7 +125,7 @@ if st.session_state.quiz_started and not st.session_state.submitted:
     question_data = questions[current]
 
     st.markdown(f"### Question {current + 1} of {total}")
-    st.markdown("<p style='font-size: 16px; color: #555;'>In your couple:</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size: 16px; color: #000000;'>In your couple:</p>", unsafe_allow_html=True)
     st.markdown(f"**{question_data['question']}**")
 
     answer = st.radio(
