@@ -182,7 +182,10 @@ if st.session_state.submitted:
 
     # Display results for each category with pie charts and insights.
     for category in results:
-        st.header(f"{category} Expenses")
+        st.markdown(
+            f"<h3 style='font-size:20px;'>{category} Expenses</h3>",
+            unsafe_allow_html=True
+        )
         percentages = compute_percentages(results[category])
         
         fig = px.pie(
@@ -219,11 +222,11 @@ if st.session_state.submitted:
             if me_pct >= 40:
                 st.info(f"It looks like you do a lot of the work with {category.lower()} expenses! It's great that you're taking the time to look after this and it's not going by the wayside. This is the perfect place to start the conversations with your partner and help bring them into the finances so you feel that you have a partner and don't become resentful!")
             elif partner_pct >= 40:
-                st.info(f"It looks like your partner does a lot of the work with {category.lower()} expenses! It's great that they're taking the time to look after this and it's not going by the wayside. If you're up for it, it might be a great time to tell your partner you would like to take a more active role. Your best chance for success is both of you being an active part of the conversation, making decisions as a team!")
+                st.info(f"It looks like your partner does a lot of the work with {category.lower()} expenses! It's great that they're taking the time to look after this and it's not going by the wayside. If you're up for it, it might be the perfect time to tell your partner you would like to take a more active role. Your best chance for success is both of you being an active part of the conversation, making decisions as a team!")
             elif neither_pct >= 40:
-                st.info(f"Hmm, it looks like you've got a bit of a gap in your {category.lower()} expenses. This should be the first thing to address as you want to make sure that you're making active decisions with your money - because not making a decision is a decision in itself, and it just doesn't tend to lead to the outcomes we want.")
+                st.info(f"Hmm, it looks like you've got a bit of missing gap in your {category.lower()} expenses. This should be the first thing to address on your financial journey as you want to make sure that you and your partner are making active decisions with your money!")
             else:
-                st.info("The results indicate a balanced mix of responsibilities. Consider discussing ways to further optimize your expense management together!")
+                st.info("Your roles are quite the mix! This is a great moment to have a conversation with your partner and take on some of the roles together!")
 
     if st.button("Restart Quiz"):
         for key in list(st.session_state.keys()):
