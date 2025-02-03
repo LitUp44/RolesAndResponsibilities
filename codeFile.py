@@ -228,6 +228,8 @@ if st.session_state.submitted:
             else:
                 st.info("Your roles are quite the mix! This is a great moment to have a conversation with your partner and take on some of the roles together!")
 
+    st.image("FinancesInfographic.png", width=700)
+
     if st.button("Restart Quiz"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
