@@ -177,10 +177,10 @@ if st.session_state.submitted:
             title=f"{category} Responsibilities Distribution",
             color=list(percentages.keys()),
             color_discrete_map={
-                "Me! 🕺": "lightblue",
-                "My partner 😁": "lightgreen",
-                "Neither of us really 🙇": "lightgray",
-                "Both of us 👯": "orange"
+                "Me! 🕺": "#233c64",
+                "My partner 😁": "#8f4e52",
+                "Neither of us really 🙇": "#f5724b",
+                "Both of us 👯": "#ffeae6"
             }
         )
         st.plotly_chart(fig)
