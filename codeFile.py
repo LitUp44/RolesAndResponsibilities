@@ -213,7 +213,7 @@ if st.session_state.submitted:
     # Display results for each category with pie charts and insights.
     for category in results:
         st.markdown(
-            f"<h3 style='font-size:40px;'>{category} Expenses</h3>",
+            f"<h3 style='font-size:40px;'>{category} Finances</h3>",
             unsafe_allow_html=True
         )
         percentages = compute_percentages(results[category])
