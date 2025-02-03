@@ -65,10 +65,6 @@ long_term_questions = [
     {"question": "If you have debt, who decides what your debt payments will be?", "category": "Long-term"},
 ]
 
-# Combine and shuffle the questions
-all_questions = day_to_day_questions + long_term_questions
-random.shuffle(all_questions)
-
 # -----------------------------
 # Updated options list with emojis
 # -----------------------------
@@ -86,6 +82,12 @@ if "responses" not in st.session_state:
 if "submitted" not in st.session_state:
     st.session_state.submitted = False
 
+# Store the shuffled questions only once
+if "questions" not in st.session_state:
+    all_questions = day_to_day_questions + long_term_questions
+    # Randomly shuffle and store the list of questions.
+    st.session_state.questions = random.sample(all_questions, len(all_questions))
+
 # -----------------------------
 # Main App Logic
 # -----------------------------
@@ -99,18 +101,19 @@ if not st.session_state.quiz_started and not st.session_state.submitted:
     st.write("Welcome! Ready to find out which money roles suit you best?")
     if st.button("Start Now"):
         st.session_state.quiz_started = True
-        st.rerun()
+        st.experimental_rerun()
 
 # Quiz Question Pages: Display one question per page.
 if st.session_state.quiz_started and not st.session_state.submitted:
+    questions = st.session_state.questions  # use our pre-shuffled list
     current = st.session_state.current_question
-    total = len(all_questions)
-    question_data = all_questions[current]
+    total = len(questions)
+    question_data = questions[current]
 
     st.markdown(f"### Question {current + 1} of {total}")
     st.markdown(f"**{question_data['question']}**")
 
-    # Provide radio options for the question
+    # Provide radio options for the question.
     answer = st.radio(
         label="",
         options=options,
@@ -118,44 +121,43 @@ if st.session_state.quiz_started and not st.session_state.submitted:
         horizontal=True
     )
 
-    # Navigation buttons
+    # Navigation buttons.
     col1, col2, col3 = st.columns([1, 1, 1])
     with col1:
         if current > 0:
             if st.button("Previous"):
                 st.session_state.current_question -= 1
-                st.rerun()
+                st.experimental_rerun()
     with col3:
-        # For the final question, change button text to "Submit"
+        # On the final question, change button text to "Submit".
         if current == total - 1:
             if st.button("Submit"):
-                # Save the answer for the current question
+                # Save the answer for the current question.
                 st.session_state.responses[f"q_{current}"] = answer
                 st.session_state.submitted = True
-                st.rerun()
+                st.experimental_rerun()
         else:
             if st.button("Next"):
-                # Save the answer and move to the next question
+                # Save the answer and move to the next question.
                 st.session_state.responses[f"q_{current}"] = answer
                 st.session_state.current_question += 1
-                st.rerun()
+                st.experimental_rerun()
 
 # Results Page: After quiz submission.
 if st.session_state.submitted:
     st.title("Quiz Results")
     
-    # Process responses by category for insights
+    questions = st.session_state.questions  # our pre-shuffled list
+    # Process responses by category for insights.
     results = {"Day-to-day": [], "Long-term": []}
-    for idx, item in enumerate(all_questions):
+    for idx, item in enumerate(questions):
         key = f"q_{idx}"
         category = item["category"]
-        # Some questions might have not been answered if navigating back and forth,
-        # but here we assume every question was answered.
+        # We assume every question was answered.
         answer = st.session_state.responses.get(key, None)
         if answer is not None:
             results[category].append(answer)
     
-    # Helper function to compute percentages for each answer option
     def compute_percentages(answers):
         counts = {option: 0 for option in options}
         total_answers = len(answers)
@@ -164,32 +166,30 @@ if st.session_state.submitted:
         percentages = {opt: (counts[opt] / total_answers * 100) for opt in counts}
         return percentages
 
-    # Display results for each category with pie charts and insights
+    # Display results for each category with pie charts and insights.
     for category in results:
         st.header(f"{category} Expenses")
         percentages = compute_percentages(results[category])
         
-        # Create a pie chart using Plotly Express
         fig = px.pie(
             names=list(percentages.keys()),
             values=list(percentages.values()),
             title=f"{category} Responsibilities Distribution",
             color=list(percentages.keys()),
             color_discrete_map={
-                "me 🙋": "lightblue",
-                "my partner": "lightgreen",
-                "neither of us really": "lightgray",
-                "both of us 👫": "orange"
+                "Me! 🕺": "lightblue",
+                "My partner 😁": "lightgreen",
+                "Neither of us really 🙇": "lightgray",
+                "Both of us 👯": "orange"
             }
         )
         st.plotly_chart(fig)
         
-        # Insights based on the percentages
         st.subheader("Insights:")
-        both_pct = percentages["both of us 👫"]
-        me_pct = percentages["me 🙋"]
-        partner_pct = percentages["my partner"]
-        neither_pct = percentages["neither of us really"]
+        both_pct = percentages["Both of us 👯"]
+        me_pct = percentages["Me! 🕺"]
+        partner_pct = percentages["My partner 😁"]
+        neither_pct = percentages["Neither of us really 🙇"]
         
         if both_pct > 60:
             st.info(f"Awesome! It looks like you and your partner are working together to manage your {category.lower()} expenses!")
@@ -203,7 +203,6 @@ if st.session_state.submitted:
             else:
                 st.info("The results indicate a balanced mix of responsibilities. Consider discussing ways to further optimize your expense management together!")
 
-    # Option to restart the quiz
     if st.button("Restart Quiz"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
