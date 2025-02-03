@@ -182,6 +182,13 @@ if st.session_state.submitted:
                 "Neither of us really 🙇": "#f5724b",
                 "Both of us 👯": "#ffeae6"
             }
+            fig.update_layout(
+                legend=dict(
+                    font=dict(
+                        size=18  # change this value to your desired font size
+                )
+            )
+        )
         )
         st.plotly_chart(fig)
         
