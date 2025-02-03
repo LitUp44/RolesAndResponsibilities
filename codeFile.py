@@ -159,6 +159,31 @@ if st.session_state.quiz_started and not st.session_state.submitted:
 
 # Results Page: After quiz submission.
 if st.session_state.submitted:
+
+    st.title("Quiz Results")
+    
+    # Move the image right after the header
+    st.image("FinancialsInfographic.png", width=700)
+    
+    # Add some explanatory text before the results sections
+    st.markdown(
+        """
+        <div style="padding: 10px; background-color: #f0f0f0; border-radius: 8px;">
+            <p style="font-size: 18px; color: #333;">
+                Thank you for completing the quiz! This aims to help you see how you and your partner divide financial roles. 
+                It's a bit of a trick question because ultimately you want to make your decisions together even if you execute different things.
+                Ultimately the goal is to make sure you both feel you have a real partner when it comes to finances!
+
+                Day-to-day finances are the finacial decisions that happen daily or monthly. Paying bills ontime, deciding what kind of vacation you can afford. 
+
+                Longterm financial decisions are the decisions that govern your long-term thinking; how you want to save and invest your money, what kind of retirement you hope to have. 
+
+                The goal is to have most of these roles be a strong 'BOTH' as you progress on your financial journey! Check out your results below.  
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     
     questions = st.session_state.questions  # our pre-shuffled list
     # Process responses by category for insights.
@@ -230,7 +255,6 @@ if st.session_state.submitted:
             else:
                 st.info("Your roles are quite the mix! This is a great moment to have a conversation with your partner and take on some of the roles together!")
 
-    st.image("FinancesInfographic.png", width=700)
 
     if st.button("Restart Quiz"):
         for key in list(st.session_state.keys()):
