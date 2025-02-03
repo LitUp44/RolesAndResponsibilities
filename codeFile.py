@@ -66,17 +66,17 @@ st.markdown(
 day_to_day_questions = [
     {"question": "Who pays most of the bills? (Even if you split the cost, who actually pays them?)", "category": "Day-to-day"},
     {"question": "Who monitors your monthly budget if you have one?", "category": "Day-to-day"},
-    {"question": "Who predominantly determines how much you can afford for your rent or mortgage payment?", "category": "Day-to-day"},
-    {"question": "Who predominantly sets the bar for how much is acceptable to spend on groceries?", "category": "Day-to-day"},
-    {"question": "Who would normally decide how much you could spend on a vacation?", "category": "Day-to-day"},
+    {"question": "Who decided how much you can afford for your rent or mortgage payment?", "category": "Day-to-day"},
+    {"question": "Who usually decides how much is acceptable to spend on groceries?", "category": "Day-to-day"},
+    {"question": "Who would normally decide how much you can afford to spend on a vacation?", "category": "Day-to-day"},
 ]
 
 long_term_questions = [
-    {"question": "Who decides what your long-term financial strategy will be?", "category": "Long-term"},
-    {"question": "Who decides which investments you’re going to make and how much you’re going to invest every month or every year?", "category": "Long-term"},
-    {"question": "Most often, who thinks about how much you need to be setting aside for retirement / how much you should have when you retire?", "category": "Long-term"},
-    {"question": "If you have debt, who keeps an eye on your debt payback date?", "category": "Long-term"},
-    {"question": "If you have debt, who decides what your debt payments will be?", "category": "Long-term"},
+    {"question": "Who thinks about what your long-term financial strategy will be?", "category": "Long-term"},
+    {"question": "Who decides which investments you’re going to make? Ie. properties, stocks, mostly cash in savings etc.", "category": "Long-term"},
+    {"question": "Who thinks about how much you need to be setting aside for retirement / how much you should have when you retire?", "category": "Long-term"},
+    {"question": "Who decides how much you're going to save / invest per month?", "category": "Long-term"},
+    {"question": "Who keeps an eye on your debt payback and decides how much your debt payments will be? (If you have debt, otherwise not applicable)", "category": "Long-term"},
 ]
 
 # -----------------------------
