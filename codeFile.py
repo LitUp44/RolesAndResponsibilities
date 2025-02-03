@@ -183,7 +183,7 @@ if st.session_state.submitted:
     # Display results for each category with pie charts and insights.
     for category in results:
         st.markdown(
-            f"<h3 style='font-size:20px;'>{category} Expenses</h3>",
+            f"<h3 style='font-size:40px;'>{category} Expenses</h3>",
             unsafe_allow_html=True
         )
         percentages = compute_percentages(results[category])
@@ -210,7 +210,10 @@ if st.session_state.submitted:
         
         st.plotly_chart(fig)
         
-        st.subheader("Insights:")
+        st.markdown(
+            f"<h3 style='font-size:20px;'>Insights:</h3>",
+            unsafe_allow_html=True
+        )
         both_pct = percentages["Both of us 👯"]
         me_pct = percentages["Me! 🕺"]
         partner_pct = percentages["My partner 😁"]
