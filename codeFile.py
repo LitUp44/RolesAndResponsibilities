@@ -18,7 +18,7 @@ def app_header():
     )
 
 def quiz_subheader():
-    """Display the sub-header for the quiz only."""
+    """Display the sub-header for the quiz only on the landing page."""
     st.markdown(
         """
         <div style="background-color: #8f4e52; padding: 10px; text-align: center; border-radius: 8px;">
@@ -77,10 +77,14 @@ options = ["me 🙋", "my partner", "neither of us really", "both of us 👫"]
 # -----------------------------
 # Session State Initialization
 # -----------------------------
+if "quiz_started" not in st.session_state:
+    st.session_state.quiz_started = False
+if "current_question" not in st.session_state:
+    st.session_state.current_question = 0
+if "responses" not in st.session_state:
+    st.session_state.responses = {}
 if "submitted" not in st.session_state:
     st.session_state.submitted = False
-if "start_quiz" not in st.session_state:
-    st.session_state.start_quiz = False
 
 # -----------------------------
 # Main App Logic
@@ -89,58 +93,78 @@ if "start_quiz" not in st.session_state:
 # Always display the header (logo and title)
 app_header()
 
-# Landing Page: Before quiz start and submission.
-if not st.session_state.start_quiz and not st.session_state.submitted:
+# Landing Page: Before quiz starts and before submission.
+if not st.session_state.quiz_started and not st.session_state.submitted:
     quiz_subheader()
     st.write("Welcome! Ready to find out which money roles suit you best?")
     if st.button("Start Now"):
-        st.session_state.start_quiz = True
+        st.session_state.quiz_started = True
         st.rerun()
 
-# Quiz Form: Display only after clicking "Start Now"
-if st.session_state.start_quiz and not st.session_state.submitted:
-    st.write("For each question, please select who is responsible:")
-    with st.form(key="quiz_form"):
-        responses = {}
-        for idx, item in enumerate(all_questions):
-            q_key = f"q_{idx}"
-            # Display only the question text (category label removed)
-            st.markdown(f"**{item['question']}**")
-            responses[q_key] = st.radio(
-                label="",
-                options=options,
-                key=q_key,
-                horizontal=True  # Our CSS hack makes the options display inline.
-            )
-            st.markdown("---")
-        submitted = st.form_submit_button("Submit")
-        if submitted:
-            st.session_state.submitted = True
-            st.session_state.responses = responses
-            st.session_state.questions = all_questions
-            st.rerun()
+# Quiz Question Pages: Display one question per page.
+if st.session_state.quiz_started and not st.session_state.submitted:
+    current = st.session_state.current_question
+    total = len(all_questions)
+    question_data = all_questions[current]
+
+    st.markdown(f"### Question {current + 1} of {total}")
+    st.markdown(f"**{question_data['question']}**")
+
+    # Provide radio options for the question
+    answer = st.radio(
+        label="",
+        options=options,
+        key=f"q_{current}",
+        horizontal=True
+    )
+
+    # Navigation buttons
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col1:
+        if current > 0:
+            if st.button("Previous"):
+                st.session_state.current_question -= 1
+                st.rerun()
+    with col3:
+        # For the final question, change button text to "Submit"
+        if current == total - 1:
+            if st.button("Submit"):
+                # Save the answer for the current question
+                st.session_state.responses[f"q_{current}"] = answer
+                st.session_state.submitted = True
+                st.rerun()
+        else:
+            if st.button("Next"):
+                # Save the answer and move to the next question
+                st.session_state.responses[f"q_{current}"] = answer
+                st.session_state.current_question += 1
+                st.rerun()
 
 # Results Page: After quiz submission.
 if st.session_state.submitted:
     st.title("Quiz Results")
     
-    # Process responses by category for the insights
+    # Process responses by category for insights
     results = {"Day-to-day": [], "Long-term": []}
-    for idx, item in enumerate(st.session_state.questions):
+    for idx, item in enumerate(all_questions):
         key = f"q_{idx}"
         category = item["category"]
-        answer = st.session_state.responses[key]
-        results[category].append(answer)
+        # Some questions might have not been answered if navigating back and forth,
+        # but here we assume every question was answered.
+        answer = st.session_state.responses.get(key, None)
+        if answer is not None:
+            results[category].append(answer)
     
+    # Helper function to compute percentages for each answer option
     def compute_percentages(answers):
         counts = {option: 0 for option in options}
-        total = len(answers)
+        total_answers = len(answers)
         for ans in answers:
             counts[ans] += 1
-        percentages = {opt: (counts[opt] / total * 100) for opt in counts}
+        percentages = {opt: (counts[opt] / total_answers * 100) for opt in counts}
         return percentages
 
-    # Display results for each category with a pie chart and insights
+    # Display results for each category with pie charts and insights
     for category in results:
         st.header(f"{category} Expenses")
         percentages = compute_percentages(results[category])
