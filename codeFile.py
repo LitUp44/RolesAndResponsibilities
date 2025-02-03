@@ -1,136 +1,164 @@
 import streamlit as st
-import random
-import plotly.express as px
+import pandas as pd
+import altair as alt
 
-# --- Custom CSS to display radio options horizontally ---
-st.markdown(
+# -----------------------------
+# Helper Functions for Header & Subheader
+# -----------------------------
+
+def app_header():
+    """Display a persistent header with the logo and main title."""
+    st.image("Aligned White.png", width=200)  # Adjust width as needed.
+    st.markdown(
+        """
+        <div style="background-color: #f5724b; padding: 10px; text-align: center; border-radius: 8px;">
+            <h1 style="color: #ffeae6; margin: 0;">Money Roles!</h1>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+def quiz_subheader():
+    """Display the sub-header for the landing page only."""
+    st.markdown(
+        """
+        <div style="background-color: #8f4e52; padding: 10px; text-align: center; border-radius: 8px;">
+            <p style="color: #ffeae6; margin: 5px 0 0 0; font-size: 32px;">
+                Which money roles do you like to take? Take the quiz and find out!
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+# -----------------------------
+# Session State Initialization
+# -----------------------------
+
+# Phase values: "landing", "quiz", "results"
+if "phase" not in st.session_state:
+    st.session_state.phase = "landing"  # Start at the landing page.
+
+# Initialize quiz state variables (only needed for quiz phase and beyond).
+if "current_question" not in st.session_state:
+    st.session_state.current_question = 0
+
+if "scores" not in st.session_state:
+    # Example categories (adjust based on your quiz).
+    all_categories = {"Travel", "Experiences", "Convenience", "Luxury", 
+                      "Relationships", "SelfImprovement", "Health", 
+                      "Generosity", "Freedom"}
+    st.session_state.scores = {cat: 0 for cat in all_categories}
+
+# Dummy question list (replace with your full 13 questions)
+questions = [
+    ("1. When it comes to lunch, what’s your preference?", [
+        ("Convenience", "Grab something quick and easy to save time"),
+        ("Experiences", "Try out a new restaurant or café every time"),
+        ("Health", "Meal-prep at home so I know it’s healthy"),
+        ("Relationships", "Meet a friend or family member for lunch")
+    ]),
+    ("2. It’s Saturday night! How do you like to spend it?", [
+        ("Generosity", "I love to host my friends or family."),
+        ("Experiences", "Plan a special experience like a concert."),
+        ("SelfImprovement", "Work on a personal project."),
+        ("Freedom", "I like not having a set plan.")
+    ])
+    # ... add additional questions as needed ...
+]
+
+# -----------------------------
+# Page Functions
+# -----------------------------
+
+def show_landing_page():
+    """Display the landing page with header, subheader, and a 'Start Now' button."""
+    app_header()      # Always show the header.
+    quiz_subheader()  # Show the subheader.
+    
+    # Add extra padding between subheader and button.
+    st.markdown("<div style='padding-bottom: 20px;'></div>", unsafe_allow_html=True)
+    
+    if st.button("Start Now"):
+        st.session_state.phase = "quiz"
+        st.rerun()
+
+def show_quiz():
+    """Display the quiz questions.
+    
+    In this phase, only the persistent header is shown (the subheader is hidden).
     """
-    <style>
-    /* This CSS targets the container for radio buttons and displays the labels inline */
-    div[role="radiogroup"] > label {
-        display: inline-flex;
-        margin-right: 15px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-# --- Define the quiz questions ---
-day_to_day_questions = [
-    {"question": "Who pays most of the bills? (Even if you split the cost, who actually pays them?)", "category": "Day-to-day"},
-    {"question": "Who monitors your monthly budget if you have one?", "category": "Day-to-day"},
-    {"question": "Who predominantly determines how much you can afford for your rent or mortgage payment?", "category": "Day-to-day"},
-    {"question": "Who predominantly sets the bar for how much is acceptable to spend on groceries?", "category": "Day-to-day"},
-    {"question": "Who would normally decide how much you could spend on a vacation?", "category": "Day-to-day"},
-]
-
-long_term_questions = [
-    {"question": "Who decides what your long-term financial strategy will be?", "category": "Long-term"},
-    {"question": "In your couple, who decides which investments you’re going to make and how much you’re going to invest every month or every year?", "category": "Long-term"},
-    {"question": "Most often, who thinks about how much you need to be setting aside for retirement / how much you should have when you retire?", "category": "Long-term"},
-    {"question": "If you have debt, who keeps an eye on your debt payback date?", "category": "Long-term"},
-    {"question": "If you have debt, who decides what your debt payments will be?", "category": "Long-term"},
-]
-
-# Combine and shuffle the questions
-all_questions = day_to_day_questions + long_term_questions
-random.shuffle(all_questions)
-
-# --- Updated options list with emojis ---
-options = ["me 🙋", "my partner", "neither of us really", "both of us 👫"]
-
-# --- Quiz Form ---
-if "submitted" not in st.session_state:
-    st.session_state.submitted = False
-
-if not st.session_state.submitted:
-    st.title("Financial Responsibilities Quiz")
-    st.write("For each question, please select who is responsible:")
-
-    with st.form(key="quiz_form"):
-        responses = {}
-        for idx, item in enumerate(all_questions):
-            q_key = f"q_{idx}"
-            # Removed the category label from the question display:
-            st.markdown(f"**{item['question']}**")
-            responses[q_key] = st.radio(
-                label="",
-                options=options,
-                key=q_key,
-                horizontal=True  # Using custom CSS to help display options inline.
-            )
-            st.markdown("---")
-        submitted = st.form_submit_button("Submit")
-        if submitted:
-            st.session_state.submitted = True
-            st.session_state.responses = responses
-            st.session_state.questions = all_questions
+    app_header()  # Only display the persistent header.
+    
+    # Check if there are still questions to show.
+    if st.session_state.current_question < len(questions):
+        question_text, answers = questions[st.session_state.current_question]
+        st.markdown(f"### {question_text}")
+        
+        # Prepare answer options.
+        options = [answer_text for _, answer_text in answers]
+        choice = st.radio("Select your answer:", options, key=f"question_{st.session_state.current_question}")
+        
+        if st.button("Next"):
+            # Update the score for the selected answer.
+            for cat, answer_text in answers:
+                if answer_text == choice:
+                    st.session_state.scores[cat] += 1
+                    break
+            st.session_state.current_question += 1
             st.rerun()
+    else:
+        # If no more questions, move to results.
+        st.session_state.phase = "results"
+        st.rerun()
 
-# --- Results Page ---
-if st.session_state.submitted:
+def show_quiz_results():
+    """Display the quiz results.
+    
+    For demonstration, this page displays the scores as a horizontal bar chart.
+    """
+    app_header()  # Only the persistent header.
     st.title("Quiz Results")
     
-    # Separate responses by category for processing the insights
-    results = {"Day-to-day": [], "Long-term": []}
-    for idx, item in enumerate(st.session_state.questions):
-        key = f"q_{idx}"
-        category = item["category"]
-        answer = st.session_state.responses[key]
-        results[category].append(answer)
+    # Retrieve scores.
+    scores = st.session_state.get("scores", {})
+    if not scores:
+        st.write("No scores found. You may not have completed the quiz.")
+        return
+
+    # Create a DataFrame from the scores dictionary.
+    data = pd.DataFrame(list(scores.items()), columns=["Money Dial", "Score"])
     
-    # Function to compute percentages
-    def compute_percentages(answers):
-        counts = {option: 0 for option in options}
-        total = len(answers)
-        for ans in answers:
-            counts[ans] += 1
-        percentages = {opt: (counts[opt] / total * 100) for opt in counts}
-        return percentages
-
-    # Display results for each category
-    for category in results:
-        st.header(f"{category} Expenses")
-        percentages = compute_percentages(results[category])
-        
-        # Create a pie chart using Plotly Express
-        fig = px.pie(
-            names=list(percentages.keys()),
-            values=list(percentages.values()),
-            title=f"{category} Responsibilities Distribution",
-            color=list(percentages.keys()),
-            color_discrete_map={
-                "me 🙋": "lightblue",
-                "my partner": "lightgreen",
-                "neither of us really": "lightgray",
-                "both of us 👫": "orange"
-            }
-        )
-        st.plotly_chart(fig)
-        
-        # --- Insights ---
-        st.subheader("Insights:")
-        both_pct = percentages["both of us 👫"]
-        me_pct = percentages["me 🙋"]
-        partner_pct = percentages["my partner"]
-        neither_pct = percentages["neither of us really"]
-        
-        if both_pct > 60:
-            st.info(f"Awesome! It looks like you and your partner are working together to manage your {category.lower()} expenses!")
-        else:
-            if me_pct > 40:
-                st.info(f"It looks like you do a lot of the work with {category.lower()} expenses! It's great that you're taking the time to look after this and it's not going by the wayside. This is the perfect place to start the conversations with your partner and help bring them into the finances so you feel that you have a partner and don't become resentful!")
-            elif partner_pct > 40:
-                st.info(f"It looks like your partner does a lot of the work with {category.lower()} expenses! It's great that they're taking the time to look after this and it's not going by the wayside. If you're up for it, it might be a great time to tell your partner you would like to take a more active role. Your best chance for success is both of you being an active part of the conversation, making decisions as a team!")
-            elif neither_pct > 40:
-                st.info(f"Hmm, it looks like you've got a bit of a gap in your {category.lower()} expenses. This should be the first thing to address as you want to make sure that you're making active decisions with your money - because not making a decision is a decision in itself, and it just doesn't tend to lead to the outcomes we want.")
-            else:
-                st.info("The results indicate a balanced mix of responsibilities. Consider discussing ways to further optimize your expense management together!")
-
-    # Option to restart the quiz
+    # Create a horizontal bar chart.
+    chart = alt.Chart(data).mark_bar(color="#682d24").encode(
+        x=alt.X("Score:Q", title="Points", axis=alt.Axis(grid=False, format="d", tickMinStep=1)),
+        y=alt.Y("Money Dial:N", title="Money Dial", sort="-x", axis=alt.Axis(grid=False))
+    ).properties(
+        width=600,
+        height=400,
+        title="Money Dial Scores"
+    )
+    
+    st.altair_chart(chart, use_container_width=True)
+    
+    # Optionally, a button to restart.
     if st.button("Restart Quiz"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
+        # Reset quiz-related session state variables.
+        for key in ["phase", "current_question", "scores"]:
+            if key in st.session_state:
+                del st.session_state[key]
+        st.session_state.phase = "landing"
         st.rerun()
+
+# -----------------------------
+# Main App Logic
+# -----------------------------
+
+if st.session_state.phase == "landing":
+    show_landing_page()
+elif st.session_state.phase == "quiz":
+    show_quiz()
+elif st.session_state.phase == "results":
+    show_quiz_results()
+
 
