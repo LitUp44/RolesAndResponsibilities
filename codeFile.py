@@ -174,7 +174,7 @@ if st.session_state.submitted:
         fig = px.pie(
             names=list(percentages.keys()),
             values=list(percentages.values()),
-            title=f"{category} Responsibilities Distribution",
+            title=f"",
             color=list(percentages.keys()),
             color_discrete_map={
                 "Me! 🕺": "#233c64",
