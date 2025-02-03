@@ -17,7 +17,6 @@ st.markdown(
 )
 
 # --- Define the quiz questions ---
-# Each question is a dict with a text and category tag.
 day_to_day_questions = [
     {"question": "Who pays most of the bills? (Even if you split the cost, who actually pays them?)", "category": "Day-to-day"},
     {"question": "Who monitors your monthly budget if you have one?", "category": "Day-to-day"},
@@ -38,7 +37,7 @@ long_term_questions = [
 all_questions = day_to_day_questions + long_term_questions
 random.shuffle(all_questions)
 
-# Options for each question
+# --- Updated options list with emojis ---
 options = ["me 🙋", "my partner", "neither of us really", "both of us 👫"]
 
 # --- Quiz Form ---
@@ -53,14 +52,13 @@ if not st.session_state.submitted:
         responses = {}
         for idx, item in enumerate(all_questions):
             q_key = f"q_{idx}"
-            # Display question text with its category as a subheader
-            st.markdown(f"**({item['category']}) {item['question']}**")
-            # The radio button is rendered with our custom CSS making the options display inline.
+            # Removed the category label from the question display:
+            st.markdown(f"**{item['question']}**")
             responses[q_key] = st.radio(
                 label="",
                 options=options,
                 key=q_key,
-                horizontal=True  # Although Streamlit doesn’t officially support horizontal layout, our CSS hack helps.
+                horizontal=True  # Using custom CSS to help display options inline.
             )
             st.markdown("---")
         submitted = st.form_submit_button("Submit")
@@ -74,7 +72,7 @@ if not st.session_state.submitted:
 if st.session_state.submitted:
     st.title("Quiz Results")
     
-    # Separate responses by category
+    # Separate responses by category for processing the insights
     results = {"Day-to-day": [], "Long-term": []}
     for idx, item in enumerate(st.session_state.questions):
         key = f"q_{idx}"
@@ -96,25 +94,25 @@ if st.session_state.submitted:
         st.header(f"{category} Expenses")
         percentages = compute_percentages(results[category])
         
-        # Create a pie chart using Plotly
+        # Create a pie chart using Plotly Express
         fig = px.pie(
             names=list(percentages.keys()),
             values=list(percentages.values()),
             title=f"{category} Responsibilities Distribution",
             color=list(percentages.keys()),
             color_discrete_map={
-                "me": "lightblue",
+                "me 🙋": "lightblue",
                 "my partner": "lightgreen",
                 "neither of us really": "lightgray",
-                "both of us": "orange"
+                "both of us 👫": "orange"
             }
         )
         st.plotly_chart(fig)
         
         # --- Insights ---
         st.subheader("Insights:")
-        both_pct = percentages["both of us"]
-        me_pct = percentages["me"]
+        both_pct = percentages["both of us 👫"]
+        me_pct = percentages["me 🙋"]
         partner_pct = percentages["my partner"]
         neither_pct = percentages["neither of us really"]
         
@@ -135,3 +133,4 @@ if st.session_state.submitted:
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
