@@ -163,7 +163,7 @@ if st.session_state.submitted:
     st.title("Quiz Results")
     
     # Move the image right after the header
-    st.image("FinancialsInfographic.png", width=700)
+    st.image("FinancesInfographic.png", width=700)
     
     # Add some explanatory text before the results sections
     st.markdown(
