@@ -195,11 +195,19 @@ if st.session_state.submitted:
             results[category].append(answer)
     
     def compute_percentages(answers):
-        counts = {option: 0 for option in options}
-        total_answers = len(answers)
-        for ans in answers:
+        # Only count responses that are not "Not really applicable"
+        filtered_answers = [ans for ans in answers if ans != "Not really applicable"]
+        
+        # Build a counts dictionary only for the options you want to show
+        valid_options = [option for option in options if option != "Not really applicable"]
+        counts = {option: 0 for option in valid_options}
+        
+        total = len(filtered_answers)
+        for ans in filtered_answers:
             counts[ans] += 1
-        percentages = {opt: (counts[opt] / total_answers * 100) for opt in counts}
+        
+        # Calculate percentages only from the valid options
+        percentages = {opt: (counts[opt] / total * 100) for opt in counts} if total > 0 else {}
         return percentages
 
     # Display results for each category with pie charts and insights.
