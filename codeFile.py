@@ -25,7 +25,7 @@ def app_header():
     st.markdown(
         """
         <div style="background-color: #f5724b; padding: 10px; text-align: center; border-radius: 8px;">
-            <h1 style="color: #ffeae6; margin: 0;">Money Roles!</h1>
+            <h1 style="color: #ffeae6; margin: 0;">Understanding Money Roles!</h1>
         </div>
         """,
         unsafe_allow_html=True
