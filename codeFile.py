@@ -159,7 +159,6 @@ if st.session_state.quiz_started and not st.session_state.submitted:
 
 # Results Page: After quiz submission.
 if st.session_state.submitted:
-    st.title("Quiz Results")
     
     questions = st.session_state.questions  # our pre-shuffled list
     # Process responses by category for insights.
