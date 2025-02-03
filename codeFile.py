@@ -112,7 +112,7 @@ app_header()
 # Landing Page: Before quiz starts and before submission.
 if not st.session_state.quiz_started and not st.session_state.submitted:
     quiz_subheader()
-    st.write("Welcome! Ready to find out which money roles suit you best?")
+    st.write("Welcome! Let's find out how you and your partner divy up thinking about finances!")
     if st.button("Start Now"):
         st.session_state.quiz_started = True
         st.rerun()
