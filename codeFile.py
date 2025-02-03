@@ -39,7 +39,7 @@ all_questions = day_to_day_questions + long_term_questions
 random.shuffle(all_questions)
 
 # Options for each question
-options = ["me", "my partner", "neither of us really", "both of us"]
+options = ["me 🙋", "my partner", "neither of us really", "both of us 👫"]
 
 # --- Quiz Form ---
 if "submitted" not in st.session_state:
