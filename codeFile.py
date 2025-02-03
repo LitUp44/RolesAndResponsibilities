@@ -7,7 +7,7 @@ import plotly.express as px
 # -----------------------------
 def app_header():
     """Display a persistent header with the logo and main title."""
-    st.image("Aligned White.png", width=300)  # Adjust the path and width as needed.
+    st.image("Aligned White.png", width=200)  # Adjust the path and width as needed.
     st.markdown(
         """
         <div style="background-color: #f5724b; padding: 10px; text-align: center; border-radius: 8px;">
@@ -75,20 +75,31 @@ random.shuffle(all_questions)
 options = ["me 🙋", "my partner", "neither of us really", "both of us 👫"]
 
 # -----------------------------
-# Quiz Form / Results Logic
+# Session State Initialization
 # -----------------------------
 if "submitted" not in st.session_state:
     st.session_state.submitted = False
+if "start_quiz" not in st.session_state:
+    st.session_state.start_quiz = False
 
-# Display header on all pages
+# -----------------------------
+# Main App Logic
+# -----------------------------
+
+# Always display the header (logo and title)
 app_header()
 
-if not st.session_state.submitted:
-    # Display the sub-header only on the quiz (landing) page.
+# Landing Page: Before quiz start and submission.
+if not st.session_state.start_quiz and not st.session_state.submitted:
     quiz_subheader()
+    st.write("Welcome! Ready to find out which money roles suit you best?")
+    if st.button("Start Now"):
+        st.session_state.start_quiz = True
+        st.rerun()
 
+# Quiz Form: Display only after clicking "Start Now"
+if st.session_state.start_quiz and not st.session_state.submitted:
     st.write("For each question, please select who is responsible:")
-
     with st.form(key="quiz_form"):
         responses = {}
         for idx, item in enumerate(all_questions):
@@ -109,6 +120,7 @@ if not st.session_state.submitted:
             st.session_state.questions = all_questions
             st.rerun()
 
+# Results Page: After quiz submission.
 if st.session_state.submitted:
     st.title("Quiz Results")
     
@@ -120,7 +132,6 @@ if st.session_state.submitted:
         answer = st.session_state.responses[key]
         results[category].append(answer)
     
-    # Function to compute percentages for each answer option
     def compute_percentages(answers):
         counts = {option: 0 for option in options}
         total = len(answers)
@@ -149,7 +160,7 @@ if st.session_state.submitted:
         )
         st.plotly_chart(fig)
         
-        # --- Insights ---
+        # Insights based on the percentages
         st.subheader("Insights:")
         both_pct = percentages["both of us 👫"]
         me_pct = percentages["me 🙋"]
@@ -173,3 +184,4 @@ if st.session_state.submitted:
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
