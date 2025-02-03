@@ -82,7 +82,7 @@ long_term_questions = [
 # -----------------------------
 # Updated options list with emojis
 # -----------------------------
-options = ["Me! 🕺", "My partner 😁", "Neither of us really 🙇", "Both of us 👯"]
+options = ["Me! 🕺", "My partner 😁", "Neither of us really 🙇", "Both of us 👯", Not really applicable]
 
 # -----------------------------
 # Session State Initialization
