@@ -73,7 +73,7 @@ day_to_day_questions = [
 
 long_term_questions = [
     {"question": "Who decides what your long-term financial strategy will be?", "category": "Long-term"},
-    {"question": "In your couple, who decides which investments you’re going to make and how much you’re going to invest every month or every year?", "category": "Long-term"},
+    {"question": "Who decides which investments you’re going to make and how much you’re going to invest every month or every year?", "category": "Long-term"},
     {"question": "Most often, who thinks about how much you need to be setting aside for retirement / how much you should have when you retire?", "category": "Long-term"},
     {"question": "If you have debt, who keeps an eye on your debt payback date?", "category": "Long-term"},
     {"question": "If you have debt, who decides what your debt payments will be?", "category": "Long-term"},
@@ -119,15 +119,15 @@ if not st.session_state.quiz_started and not st.session_state.submitted:
 
 # Quiz Question Pages: Display one question per page.
 if st.session_state.quiz_started and not st.session_state.submitted:
-    questions = st.session_state.questions  # use our pre-shuffled list
+    questions = st.session_state.questions  # our pre-shuffled list
     current = st.session_state.current_question
     total = len(questions)
     question_data = questions[current]
 
     st.markdown(f"### Question {current + 1} of {total}")
+    st.markdown("<p style='font-size: 16px; color: #555;'>In your couple:</p>", unsafe_allow_html=True)
     st.markdown(f"**{question_data['question']}**")
 
-    # Provide radio options for the question.
     answer = st.radio(
         label="",
         options=options,
